@@ -1,11 +1,22 @@
-## Repo setup 4 week 0 challenge
+# ☀️ Solar Challenge - Week 1
 
-# solar-challenge-week1
+Welcome to the **Solar Challenge Week 1** repository — your launchpad for kicking off the Week 0 challenge! Let's get your environment up and running in no time.
 
-## To setup the enviroment
+---
 
-## clone the repo
+## 🚀 Getting Started
 
-## create a virtual enviroment for this repo
+Follow these steps to set up your local development environment:
 
-## install deps using pip install requirements.txt
+### 1. 🔁 Clone the Repository
+
+Clone this repo to your local machine:
+
+```bash
+git clone https://github.com/EYOELTEKLE/solar-challenge-week1.git
+cd solar-challenge-week1
+
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
