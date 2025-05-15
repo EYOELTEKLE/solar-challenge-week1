@@ -7,3 +7,5 @@
 ## clone the repo
 
 ## create a virtual enviroment for this repo
+
+## install deps using pip install requirements.txt
