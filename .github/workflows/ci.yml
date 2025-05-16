@@ -24,6 +24,9 @@ jobs:
       - name: Show Python version
         run: python --version
 
+      - name: validate missing python dependencies on ubuntu
+        run: python scripts/fix_pywin32.py
+
       - name: Install dependencies
         run: |
           if [ -f requirements.txt ]; then
