@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Load CSV data with optional datetime column
 def load_data(file_path, timestamp_col=None):
@@ -52,6 +53,36 @@ def generate_summary(df):
     })
     missing = missing[missing["missing_count"] > 0]
     return summary, missing
+
+
+def detect_outliers_zscore(df, columns, threshold):
+    """
+    Detect and optionally remove rows with outliers using Z-score.
+
+    Args:
+        df (pd.DataFrame): Input DataFrame.
+        columns (list): Columns to check for outliers.
+        threshold (float): Z-score threshold to identify outliers.
+
+    Returns:
+        pd.DataFrame: DataFrame with outliers removed.
+    """
+    df_clean = df.copy()
+    outlier_counts = {}
+
+    for col in columns:
+        if df_clean[col].dtype not in [np.float64, np.int64]:
+            continue
+        z_scores = (df_clean[col] - df_clean[col].mean()) / df_clean[col].std()
+        outliers = z_scores.abs() > threshold
+        outlier_counts[col] = outliers.sum()
+        df_clean = df_clean[~outliers]  # Drop outliers
+
+    print("Outliers removed per column:")
+    for col, count in outlier_counts.items():
+        print(f"{col}: {count} rows")
+
+    return df_clean
 # Plot time series for selected columns
 def plot_time_series(df, time_col, value_columns):
     """"
@@ -124,6 +155,40 @@ def plot_histogram(df, column):
     plt.ylabel("Frequency")
     plt.show()
 
+def plot_bivariate_scatters(df, pairs, hue=None):
+    """
+    Plots scatter plots for each column pair in `pairs`.
+
+    Args:
+        df (pd.DataFrame): Input data
+        pairs (list of tuples): List of (x_col, y_col) pairs to plot
+        hue (str, optional): Column to color by
+    """
+    for x_col, y_col in pairs:
+        plt.figure(figsize=(6, 4))
+        sns.scatterplot(data=df, x=x_col, y=y_col, hue=hue)
+        plt.title(f"{x_col} vs. {y_col}")
+        plt.tight_layout()
+        plt.show()
+
+
+def plot_univariate_histograms(df, numeric_cols, bins=30):
+    """
+    Plots histograms with KDE for each numeric column in the DataFrame.
+
+    Args:
+        df (pd.DataFrame): Input data
+        numeric_cols (list): List of column names to plot
+        bins (int): Number of histogram bins
+    """
+    for col in numeric_cols:
+        plt.figure(figsize=(6, 4))
+        sns.histplot(df[col], kde=True, bins=bins)
+        plt.title(f"{col} Distribution")
+        plt.xlabel(col)
+        plt.ylabel("Count")
+        plt.tight_layout()
+        plt.show()
 # Export cleaned CSV
 def export_cleaned(df, output_path):
     """"
